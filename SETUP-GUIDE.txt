@@ -1,0 +1,40 @@
+SMART MAINTAIN GONDA – V15 HTML REVIEWED PACKAGE
+
+FILES
+- index.html: complete website source, including the existing equipment photos and UI.
+- Code.gs: optional Google Apps Script backend draft.
+- SETUP-GUIDE.txt: safe deployment notes.
+
+HTML REVIEW / FIXES
+- Checked all six inline JavaScript blocks with Node.js syntax validation: no syntax errors found.
+- Found two global functions named syncNow(). The later declaration was overriding the earlier one and was omitting Team Gonda, engineering advisories, initiatives, training notes and gallery metadata from sync. Corrected the duplicate so the richer sync implementation is used.
+- Kept the existing Apps Script /exec URL already present in the HTML.
+- Preserved the existing HTML layout, equipment data, and embedded images.
+
+IMPORTANT BACKEND WARNING
+The supplied Code.gs is a standalone backend draft. It does NOT contain your existing daily AMC reminder/email functions. Do NOT replace your currently working Apps Script project with this Code.gs until the reminder functions have been reviewed and merged. Otherwise your existing reminder workflow may stop.
+
+The setupSmartMaintain() function in this package is non-destructive: it creates the SMART_MAINTAIN_DB tab if needed and adds missing keys only. It does not clear existing rows. However, the first website sync writes the website's current records into the SMART_MAINTAIN_DB database tab. Back up the spreadsheet first and confirm the current website data is correct before enabling sync.
+
+SAFE DEPLOYMENT
+1. Replace only the repository root index.html with this package's index.html and commit.
+2. Open the website and hard-refresh with Ctrl+F5.
+3. Existing /exec endpoint is retained in the HTML.
+4. Do not change or replace the currently running Apps Script code until its AMC reminder functions are merged with the backend draft.
+5. For shared data, back up the Google Sheet first. Test with non-critical data and verify the records from a second browser/device.
+
+BACKEND DRAFT SETUP (ONLY AFTER REVIEW / MERGE)
+1. Open the target Google Sheet > Extensions > Apps Script.
+2. Merge the backend functions into the existing project; preserve the current AMC reminder/email functions and triggers.
+3. Run setupSmartMaintain() once and authorize.
+4. Deploy a new version of the existing web app, preserving its URL where possible.
+5. Confirm BPCL IT has approved the access/authentication model.
+
+SYNC LIMITATIONS
+- Photos are intentionally excluded from shared sync to avoid large payloads; embedded images in this HTML remain visible.
+- Team and gallery image binary uploads are not stored in Google Drive by this draft.
+- Website edits sync only the listed data fields, not HTML layout/code.
+- The website uses no-cors POST; the browser cannot verify the server's write response. A “queued” toast is not proof that Sheets saved successfully. Verify the SMART_MAINTAIN_DB tab after testing.
+
+SECURITY
+Do not deploy a public-write Apps Script endpoint with confidential BPCL data without BPCL IT approval. A URL in HTML is public, not a secret. Never put passwords, OTPs or mailbox credentials in HTML, GitHub or Code.gs.
